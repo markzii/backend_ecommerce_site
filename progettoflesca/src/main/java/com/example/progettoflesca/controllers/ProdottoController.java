@@ -1,19 +1,21 @@
 package com.example.progettoflesca.controllers;
 
+import com.example.progettoflesca.entities.Categoria;
 import com.example.progettoflesca.entities.Prodotto;
 import com.example.progettoflesca.exception.*;
+import com.example.progettoflesca.repositories.CategoriaRepository;
 import jakarta.persistence.PessimisticLockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import com.example.progettoflesca.service.ProdottoService;
+import com.example.progettoflesca.services.ProdottoService;
 
 import java.util.List;
 
 @RestController
-//@CrossOrigin("*")
+@CrossOrigin("*")
 @RequestMapping("/prodotti")
 public class ProdottoController {
     @Autowired
@@ -21,42 +23,51 @@ public class ProdottoController {
 
     private static final int MAX=5;
 
-    @GetMapping
+    @GetMapping("/getall")
     //@PreAuthorize("hasAuthority('') or hasAuthority('')")
-    @PreAuthorize("hasRole('client_user') or hasRole('client_admin')")
+    //@PreAuthorize("hasRole('client_user') or hasRole('client_admin')")
     public ResponseEntity getTuttiProdotti(@RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @RequestParam(value = "sortBy", defaultValue = "id") String sortBy) {
         List<Prodotto> risultato = prodottoService.getTuttiProdotti(pageNumber, pageSize, sortBy);
         return new ResponseEntity(risultato, HttpStatus.OK);
     }
     @GetMapping("/ricercaNome")
-    @PreAuthorize("hasRole('client_user') or hasRole('client_admin')")
     public ResponseEntity getProdottiNome(@RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @RequestParam(value = "sortBy", defaultValue = "id") String sortBy, @RequestParam(value = "nome", defaultValue = "") String nome) {
         List<Prodotto> risultato = prodottoService.getProdottiDalNome(nome, pageNumber, pageSize, sortBy);
         return new ResponseEntity(risultato, HttpStatus.OK);
     }
     @GetMapping("/ricercaCodiceBarre")
-    @PreAuthorize("hasRole('client_user') or hasRole('client_admin')")
     public ResponseEntity getProdottoCodiceBarre(@RequestParam(value = "codiceBarre", defaultValue = "") String codiceBarre) {
         Prodotto risultato = prodottoService.getProdottoDalCodiceBarre(codiceBarre);
         return new ResponseEntity(risultato, HttpStatus.OK);
     }
     @GetMapping("/ricercaCategoria")
-    @PreAuthorize("hasRole('client_user') or hasRole('client_admin')")
     public ResponseEntity getProdottiCategoria(@RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @RequestParam(value = "sortBy", defaultValue = "id") String sortBy, @RequestParam(value = "nome", defaultValue = "") String categoria) {
         List<Prodotto> risultato = prodottoService.getProdottiDallaCategoria(categoria, pageNumber, pageSize, sortBy);
         return new ResponseEntity(risultato, HttpStatus.OK);
     }
     @GetMapping("/ricercaID")
-    @PreAuthorize("hasRole('client_user') or hasRole('client_admin')")
     public ResponseEntity getProdottiId(@RequestParam(value = "id") int id) {
         Prodotto risultato = prodottoService.getProdottiDaId(id);
         return new ResponseEntity(risultato, HttpStatus.OK);
     }
-    @PostMapping
-    @PreAuthorize("hasRole('client_user')")
+
+
+    /*@PostMapping("/addc")
+    //@PreAuthorize("hasRole('client_user')")
+    public ResponseEntity aggiungiCategoria(@RequestBody  Categoria c) {
+        System.out.println("comeee");
+        Categoria risultato = prodottoService.aggiungiCategoria(c);
+        return new ResponseEntity(risultato,HttpStatus.OK);
+    }*/
+
+    /*@PostMapping("/addp")
+    //@PreAuthorize("hasRole('client_user')")
     public ResponseEntity aggiungiProdotto(@RequestBody  Prodotto prodotto) {
+        System.out.println("ciaooooo");
         try {
-            Prodotto risultato = prodottoService.aggiungiProdotto(prodotto.getCodiceBarre(), prodotto.getNome(),prodotto.getPrezzo(), prodotto.getQuantita(),prodotto.getDescrizione(),prodotto.getCategoria().getNome());
+            Prodotto risultato = prodottoService.aggiungiProdotto(prodotto);
+
+            //Prodotto risultato = prodottoService.aggiungiProdotto(prodotto.getCodiceBarre(), prodotto.getNome(),prodotto.getPrezzo(), prodotto.getQuantita(),prodotto.getDescrizione(),prodotto.getCategoria().getNome());
             return new ResponseEntity(risultato,HttpStatus.OK);
         }catch(ProdottoEsistenteException e) {
             //si potrebbe attivare le cose delle lingue
@@ -64,8 +75,8 @@ public class ProdottoController {
         } catch (NoCodiceBarreException e) {
             return new ResponseEntity("Inserire codice a barre", HttpStatus.BAD_REQUEST);
         }
-    }
-    @PutMapping("/{id}/aggiorna")
+    }*/
+    /*@PutMapping("/{id}/aggiorna")
     @PreAuthorize("hasRole('client_user')")
     public ResponseEntity modificaProdotto( @RequestParam(value = "id") int id, @RequestParam(value = "quantita", defaultValue = "0") int quantita, @RequestParam(value = "prezzo", defaultValue = "0") float prezzo){
         int c=1;
@@ -81,9 +92,9 @@ public class ProdottoController {
             }
         }
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    }*/
 
-    @DeleteMapping("/{id}")
+    /*@DeleteMapping("/{id}")
     @PreAuthorize("hasRole('client_user')")
     public ResponseEntity eliminaProdotto( @PathVariable("id") int id){
         int c=1;
@@ -99,5 +110,5 @@ public class ProdottoController {
             }
         }
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    }*/
 }

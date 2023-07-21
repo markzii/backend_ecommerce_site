@@ -1,9 +1,8 @@
-package com.example.progettoflesca.service;
+package com.example.progettoflesca.services;
 
 import com.example.progettoflesca.entities.Categoria;
 import com.example.progettoflesca.entities.Prodotto;
 import com.example.progettoflesca.exception.*;
-import jakarta.persistence.LockModeType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -76,19 +75,37 @@ public class ProdottoService {
 
 
     //Servizi effettuabili solo dall'amministratore
-    @Transactional(readOnly = false, rollbackFor = {ProdottoEsistenteException.class, NoCodiceBarreException.class})
-    public Prodotto aggiungiProdotto(String codiceBarre, String nome, float prezzo, int quantita, String descrizione, String categoria) throws ProdottoEsistenteException, NoCodiceBarreException {
-        if(codiceBarre!=null) throw new NoCodiceBarreException();
-        if(prodRepository.existsBycodiceBarre(codiceBarre)) throw new ProdottoEsistenteException();
-        Categoria cate = categRepository.findByNome(categoria);
+    /*@Transactional(readOnly = false, rollbackFor = {ProdottoEsistenteException.class, NoCodiceBarreException.class})
+    public Prodotto aggiungiProdotto(Prodotto p /String codiceBarre, String nome, float prezzo, int quantita, String descrizione, String categoria*) throws ProdottoEsistenteException, NoCodiceBarreException {
+        System.out.println(p);
+        System.out.println(p.getCodiceBarre());
+        if(p.getCodiceBarre().equals("")) throw new NoCodiceBarreException();
+        if(prodRepository.existsBycodiceBarre(p.getCodiceBarre())) throw new ProdottoEsistenteException();
+        Categoria cate = null;
+        if(categRepository.existsByNome(p.getCategoria().getNome())){
+            cate = categRepository.findByNome(p.getCategoria().getNome());
+        }else{
+            cate = new Categoria();
+            cate.setNome(p.getCategoria().getNome());
+        }
         Prodotto prodotto= new Prodotto();
-        prodotto.setNome(nome);
-        prodotto.setCodiceBarre(codiceBarre);
-        prodotto.setPrezzo(prezzo);
-        prodotto.setQuantita(quantita);
-        prodotto.setDescrizione(descrizione);
+        prodotto.setNome(p.getNome());
+        prodotto.setCodiceBarre(p.getCodiceBarre());
+        prodotto.setPrezzo(p.getPrezzo());
+        prodotto.setQuantita(p.getQuantita());
+        prodotto.setDescrizione(p.getDescrizione());
         prodotto.setCategoria(cate);
+
+        categRepository.save(cate);
         return prodRepository.save(prodotto);
+    }
+
+    @Transactional(readOnly = false)
+    public Categoria aggiungiCategoria(Categoria c) {
+        *Categoria cate = new Categoria();
+        cate.setNome(nome);*
+        System.out.println("ciaoooqqqqq");
+        return categRepository.save(c);
     }
     @Transactional(readOnly = false, rollbackFor = AggiornamentoErroreException.class)
     public Prodotto aggiornaProdotto(int id, int quantita, float prezzo) throws AggiornamentoErroreException {
@@ -108,7 +125,9 @@ public class ProdottoService {
         Prodotto prodotto= prodRepository.findById(id);
 
         prodRepository.delete(prodotto);
-    }
+    }*/
+
+
 
 
     /*Il contesto di persistenza di Spring rileverà automaticamente le modifiche apportate all'entità gestita.

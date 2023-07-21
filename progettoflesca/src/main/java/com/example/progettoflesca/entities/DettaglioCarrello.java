@@ -23,10 +23,10 @@ public class DettaglioCarrello {
     private Prodotto prodotto;
 
     @ManyToOne
-    @JoinColumn(name = "acquisto")
+    @JoinColumn(name = "carrello")
     @JsonIgnore
     @ToString.Exclude
-    private Carrello carrello;
+    private Carrello carr;
 
 
 }

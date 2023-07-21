@@ -20,9 +20,12 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
     @SuppressWarnings("unchecked")
     public AbstractAuthenticationToken convert(final Jwt source) {
         String subject = source.getSubject();
+        System.out.println(source.getClaims().toString());
         Map<String, Object> resourceAccess = source.getClaim("resource_access");
+        System.out.println(resourceAccess);
         Map<String, Object> resource = (Map<String, Object>) resourceAccess.get(CLIENT_NAME);
         Collection<String> resourceRoles = (Collection<String>) resource.get("roles");
+        System.out.println(resourceRoles);
         Set<GrantedAuthority> authorities = resourceRoles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
         return new JwtAuthenticationToken(source, authorities);
     }

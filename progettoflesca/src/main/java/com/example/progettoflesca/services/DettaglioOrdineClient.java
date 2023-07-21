@@ -1,4 +1,4 @@
-package com.example.progettoflesca.service;
+package com.example.progettoflesca.services;
 
 import lombok.Data;
 

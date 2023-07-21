@@ -20,7 +20,7 @@ public class Carrello {
     @JsonIgnore
     private Utente utente;
 
-    @OneToMany(mappedBy = "carrello", cascade = CascadeType.MERGE, fetch=FetchType.LAZY)
-    private List<DettaglioCarrello> prodottiCarrello = new LinkedList<>();
+    @OneToMany(mappedBy = "carr", cascade = CascadeType.MERGE, fetch=FetchType.LAZY)
+    private List<DettaglioCarrello> prodottiCarrello;
 
 }

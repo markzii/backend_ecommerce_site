@@ -1,5 +1,7 @@
 package com.example.progettoflesca.entities;
 
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -19,7 +21,7 @@ public class Prodotto {
     @Column(name = "nome", nullable = false, length = 50)
     private String nome;
 
-    @Column(name = "codiceBarre", nullable = false, length = 70)
+    @Column(name = "codicebarre", nullable = false, length = 70)
     private String codiceBarre;
 
     @Column(name = "prezzo", nullable = false)
@@ -33,11 +35,11 @@ public class Prodotto {
 
     @JoinColumn(name = "categoria")
     @ManyToOne(cascade = CascadeType.MERGE)
+    @JsonIgnore
     private Categoria categoria;
 
     @Version
     @Column(name = "versione", nullable = false)
-    @JsonIgnore
     private long versione;
 
 

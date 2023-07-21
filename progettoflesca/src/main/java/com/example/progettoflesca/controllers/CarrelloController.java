@@ -1,11 +1,12 @@
 package com.example.progettoflesca.controllers;
 
 import com.example.progettoflesca.entities.Carrello;
+import com.example.progettoflesca.entities.DettaglioCarrello;
 import com.example.progettoflesca.exception.PrezzoCambiatoException;
 import com.example.progettoflesca.exception.QuantitaInsufficienteException;
-import com.example.progettoflesca.service.AcquistoService;
-import com.example.progettoflesca.service.CarrelloService;
-import com.example.progettoflesca.service.DettaglioOrdineClient;
+import com.example.progettoflesca.services.AcquistoService;
+import com.example.progettoflesca.services.CarrelloService;
+import com.example.progettoflesca.services.DettaglioOrdineClient;
 import jakarta.persistence.PessimisticLockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,17 +30,17 @@ public class CarrelloController {
 
     private static final int MAX=5;
 
-    @GetMapping
-    @PreAuthorize("hasRole('client_user')")
+    @GetMapping("/visualizza")
+    //@PreAuthorize("hasAuthority('client')")
     public ResponseEntity visualizzaCarrello() {
-        Carrello ret = carrelloService.visualizzaCarrello();
+        List<DettaglioCarrello> ret = carrelloService.visualizzaCarrello();
         return new ResponseEntity(ret,HttpStatus.OK);
     }
 
-    @PostMapping
-    @PreAuthorize("hasRole('client_user')")
+    @GetMapping("/aggiungi")
+    @PreAuthorize("hasAuthority('client')")
     public ResponseEntity aggiungiAlCarrello(@RequestParam(value = "id", defaultValue = "-1") int id, @RequestParam(value = "quantita", defaultValue = "0") int quantita) {
-        if(id == -1) return new ResponseEntity("Errore 'id prodotto'", HttpStatus.BAD_REQUEST);
+        //if(codiceBarre == -1) return new ResponseEntity("Errore 'id prodotto'", HttpStatus.BAD_REQUEST);
         try{
             return new ResponseEntity(carrelloService.aggiungiAlCarrello(id,quantita),HttpStatus.OK);
         }catch (QuantitaInsufficienteException e){
@@ -50,7 +51,7 @@ public class CarrelloController {
     }
 
     @PutMapping
-    @PreAuthorize("hasRole('client_user')")
+    @PreAuthorize("hasAuthority('client')")
     //La modifica è consentita per un prodotto per volta
     public ResponseEntity modificaCarrello(@RequestParam(value = "id", defaultValue = "-1") int id, @RequestParam(value = "quantita") int quantita) { //quantita in meno o in piu
         if(id == -1) return new ResponseEntity("Errore 'id prodotto'", HttpStatus.BAD_REQUEST);
@@ -62,21 +63,21 @@ public class CarrelloController {
         }
     }
 
-    @DeleteMapping
-    @PreAuthorize("hasRole('client_user')")
+    @GetMapping("/rimuovi")
+    @PreAuthorize("hasAuthority('client')")
     //per eliminare si usa lo stesso service di modifica con quantita = 0
-    public ResponseEntity eliminaProdottoInCarrello(@RequestParam(value = "id", defaultValue = "-1") int id) {
+    public ResponseEntity eliminaProdottoInCarrello(@RequestParam(value = "id", defaultValue = "-1") int id, @RequestParam(value = "quantita", defaultValue = "-1") int quantita) {
         if(id == -1) return new ResponseEntity("Errore 'id prodotto'", HttpStatus.BAD_REQUEST);
 
         try{
-            return new ResponseEntity(carrelloService.modificaCarrello(id,0),HttpStatus.OK);
+            return new ResponseEntity(carrelloService.modificaCarrello(id,quantita),HttpStatus.OK);
         }catch (QuantitaInsufficienteException e){ //non verrà mai generata
             return new ResponseEntity( HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/acquisto")
-    @PreAuthorize("hasRole('client_user')")
+    @PreAuthorize("hasAuthority('client')")
     public ResponseEntity acquistaCarrello(@RequestBody List<DettaglioOrdineClient> carrelloClient){
         int c=0;
         while(c<MAX)

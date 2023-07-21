@@ -1,10 +1,9 @@
-package com.example.progettoflesca.service;
+package com.example.progettoflesca.services;
 
 import com.example.progettoflesca.authentication.Utils;
 import com.example.progettoflesca.entities.*;
 import com.example.progettoflesca.exception.PrezzoCambiatoException;
 import com.example.progettoflesca.exception.QuantitaInsufficienteException;
-import jakarta.persistence.LockModeType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

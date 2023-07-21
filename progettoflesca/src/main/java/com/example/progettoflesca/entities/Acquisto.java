@@ -16,7 +16,7 @@ public class Acquisto {
     @Column(name = "id", nullable = false)
     private int id;
 
-    @Column(name = "data")
+    @Column(name = "data", nullable = false)
     private Date data;
 
     /*@CreationTimestamp

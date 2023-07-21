@@ -15,7 +15,7 @@ public class Utente {
     @Column(name = "id", nullable = false)
     private int id;
 
-    @Column(name = "codiceFiscale", nullable = true, length = 15)
+    @Column(name = "codice_fiscale", nullable = false, length = 15)
     private String codiceFiscale;
 
     @Column(name = "nome", nullable = true, length = 50)
@@ -24,7 +24,7 @@ public class Utente {
     @Column(name = "cognome", nullable = true, length = 50)
     private String cognome;
 
-    @Column(name = "email", nullable = true, length = 60)
+    @Column(name = "email", nullable = false, length = 60)
     private String email;
 
     @Column(name = "telefono", nullable = true, length = 10)
@@ -36,6 +36,7 @@ public class Utente {
     //@OneToOne(mappedBy = "utente", cascade = CascadeType.ALL)
     @OneToOne
     @JoinColumn(name = "carrello")
+    @JsonIgnore
     private Carrello carrello;
 
     @OneToMany(mappedBy = "utente", cascade = CascadeType.MERGE)
