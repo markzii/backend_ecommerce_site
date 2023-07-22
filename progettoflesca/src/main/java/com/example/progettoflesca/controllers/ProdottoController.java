@@ -41,8 +41,8 @@ public class ProdottoController {
         return new ResponseEntity(risultato, HttpStatus.OK);
     }
     @GetMapping("/ricercaCategoria")
-    public ResponseEntity getProdottiCategoria(@RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @RequestParam(value = "sortBy", defaultValue = "id") String sortBy, @RequestParam(value = "nome", defaultValue = "") String categoria) {
-        List<Prodotto> risultato = prodottoService.getProdottiDallaCategoria(categoria, pageNumber, pageSize, sortBy);
+    public ResponseEntity getProdottiCategoria(@RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @RequestParam(value = "sortBy", defaultValue = "id") String sortBy, @RequestParam(value = "genere", defaultValue = "") String genere) {
+        List<Prodotto> risultato = prodottoService.getProdottiDallaCategoria(genere, pageNumber, pageSize, sortBy);
         return new ResponseEntity(risultato, HttpStatus.OK);
     }
     @GetMapping("/ricercaID")

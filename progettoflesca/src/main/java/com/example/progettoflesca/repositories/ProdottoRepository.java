@@ -1,5 +1,6 @@
 package com.example.progettoflesca.repositories;
 
+import com.example.progettoflesca.entities.Categoria;
 import com.example.progettoflesca.entities.Prodotto;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
@@ -16,7 +17,7 @@ public interface ProdottoRepository extends JpaRepository<Prodotto, Integer> {
     boolean existsBycodiceBarre (String codiceBarre);
     Prodotto findBycodiceBarre(String codiceBarre);
     List<Prodotto> findBycategoria(String categoria);
-    Page<Prodotto> findBycategoria(String categoria, Pageable pageable);
+    Page<Prodotto> findBycategoria(Categoria categoria, Pageable pageable);
     List<Prodotto> findAll();
 
     //Prodotto findByIdWithLock(int id, LockModeType pessimisticWrite);

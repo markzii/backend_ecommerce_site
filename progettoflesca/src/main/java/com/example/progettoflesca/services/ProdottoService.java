@@ -58,7 +58,8 @@ public class ProdottoService {
     @Transactional(readOnly = true)
     public List<Prodotto> getProdottiDallaCategoria(String categoria, int numPagine, int dimPagina, String ordine) {
         Pageable paging = PageRequest.of(numPagine, dimPagina, Sort.by(ordine));
-        Page<Prodotto> pagedResult = prodRepository.findBycategoria(categoria, paging);
+        Categoria cat = categRepository.findByNome(categoria);
+        Page<Prodotto> pagedResult = prodRepository.findBycategoria(cat, paging);
         if (pagedResult.hasContent()) {
             return pagedResult.getContent();
         }

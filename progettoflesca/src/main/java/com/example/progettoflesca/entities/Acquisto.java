@@ -16,6 +16,8 @@ public class Acquisto {
     @Column(name = "id", nullable = false)
     private int id;
 
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "data", nullable = false)
     private Date data;
 

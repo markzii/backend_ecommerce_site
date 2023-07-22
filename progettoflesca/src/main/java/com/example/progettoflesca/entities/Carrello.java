@@ -20,7 +20,7 @@ public class Carrello {
     @JsonIgnore
     private Utente utente;
 
-    @OneToMany(mappedBy = "carr", cascade = CascadeType.MERGE, fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "carr", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     private List<DettaglioCarrello> prodottiCarrello;
 
 }

@@ -62,6 +62,7 @@ public class CarrelloService {
         if(!inCarrello) {
             dc = new DettaglioCarrello();
             dc.setProdotto(prodotto);
+            dc.setPrezzo(prodotto.getPrezzo());
             dc.setQuantita(quantita);
             dc.setCarr(carrello);
             dettaglioCarrelloRepository.save(dc);

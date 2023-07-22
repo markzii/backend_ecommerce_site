@@ -50,7 +50,7 @@ public class CarrelloController {
         }
     }
 
-    @PutMapping
+    /*@PutMapping
     @PreAuthorize("hasAuthority('client')")
     //La modifica è consentita per un prodotto per volta
     public ResponseEntity modificaCarrello(@RequestParam(value = "id", defaultValue = "-1") int id, @RequestParam(value = "quantita") int quantita) { //quantita in meno o in piu
@@ -61,7 +61,7 @@ public class CarrelloController {
         }catch (QuantitaInsufficienteException e){
             return new ResponseEntity("Errorre: quantita prodotto: "+e.getIdProdotto()+" in magazzino insufficiente.", HttpStatus.BAD_REQUEST);
         }
-    }
+    }*/
 
     @GetMapping("/rimuovi")
     @PreAuthorize("hasAuthority('client')")
@@ -76,13 +76,14 @@ public class CarrelloController {
         }
     }
 
-    @PutMapping("/acquisto")
+    @PostMapping("/acquisto")
     @PreAuthorize("hasAuthority('client')")
-    public ResponseEntity acquistaCarrello(@RequestBody List<DettaglioOrdineClient> carrelloClient){
+    public ResponseEntity acquistaCarrello(/*@RequestBody List<DettaglioOrdineClient> carrelloClient*/){
         int c=0;
         while(c<MAX)
             try{
-                acquistoService.acquista(carrelloClient);
+                acquistoService.acquista();
+                //acquistoService.acquista(carrelloClient);
                 return new ResponseEntity("Acquista avvenuto con successo", HttpStatus.OK);
             }catch(QuantitaInsufficienteException e ) {
                 return new ResponseEntity("Errorre: quantita prodotto: "+e.getIdProdotto()+" in magazzino insufficiente.", HttpStatus.BAD_REQUEST);
