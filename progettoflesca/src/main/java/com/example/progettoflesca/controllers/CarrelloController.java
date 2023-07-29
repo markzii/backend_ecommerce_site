@@ -1,12 +1,10 @@
 package com.example.progettoflesca.controllers;
 
-import com.example.progettoflesca.entities.Carrello;
 import com.example.progettoflesca.entities.DettaglioCarrello;
 import com.example.progettoflesca.exception.PrezzoCambiatoException;
 import com.example.progettoflesca.exception.QuantitaInsufficienteException;
 import com.example.progettoflesca.services.AcquistoService;
 import com.example.progettoflesca.services.CarrelloService;
-import com.example.progettoflesca.services.DettaglioOrdineClient;
 import jakarta.persistence.PessimisticLockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,7 +42,7 @@ public class CarrelloController {
         try{
             return new ResponseEntity(carrelloService.aggiungiAlCarrello(id,quantita),HttpStatus.OK);
         }catch (QuantitaInsufficienteException e){
-            return new ResponseEntity("Quantita prodotto: "+e.getIdProdotto()+" in magazzino insufficiente.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("Quantita prodotto in magazzino insufficiente.", HttpStatus.BAD_REQUEST);
         }catch (IllegalArgumentException e){ //forse non ci vuole perchè c'è la valid
             return new ResponseEntity("Errore, quantita minore di zero", HttpStatus.BAD_REQUEST);
         }
@@ -63,10 +61,10 @@ public class CarrelloController {
         }
     }*/
 
-    @GetMapping("/rimuovi")
+    @GetMapping("/aggiorna")
     @PreAuthorize("hasAuthority('client')")
     //per eliminare si usa lo stesso service di modifica con quantita = 0
-    public ResponseEntity eliminaProdottoInCarrello(@RequestParam(value = "id", defaultValue = "-1") int id, @RequestParam(value = "quantita", defaultValue = "-1") int quantita) {
+    public ResponseEntity modificaCarrello(@RequestParam(value = "id", defaultValue = "-1") int id, @RequestParam(value = "quantita", defaultValue = "-1") int quantita) {
         if(id == -1) return new ResponseEntity("Errore 'id prodotto'", HttpStatus.BAD_REQUEST);
 
         try{
@@ -84,11 +82,11 @@ public class CarrelloController {
             try{
                 acquistoService.acquista();
                 //acquistoService.acquista(carrelloClient);
-                return new ResponseEntity("Acquista avvenuto con successo", HttpStatus.OK);
+                return new ResponseEntity("Acquisto avvenuto con successo", HttpStatus.OK);
             }catch(QuantitaInsufficienteException e ) {
-                return new ResponseEntity("Errorre: quantita prodotto: "+e.getIdProdotto()+" in magazzino insufficiente.", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity("Errorre: quantita prodotto: "+e.getCodiceBarre()+" in magazzino insufficiente.", HttpStatus.BAD_REQUEST);
             }catch(PrezzoCambiatoException e) {
-                return new ResponseEntity("Errorre: prezzo prodotto: "+e.getIdProdotto()+" cambiato in: "+e.getPrezzo(), HttpStatus.BAD_REQUEST);
+                return new ResponseEntity("Errorre: prezzo prodotto: "+e.getNome()+" cambiato in: "+e.getPrezzo(), HttpStatus.BAD_REQUEST);
             }catch(PessimisticLockException e) {
                 c++;
             }

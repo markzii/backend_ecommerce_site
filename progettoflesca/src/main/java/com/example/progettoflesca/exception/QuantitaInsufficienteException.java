@@ -3,13 +3,13 @@ package com.example.progettoflesca.exception;
 
 public class QuantitaInsufficienteException extends Exception{
 
-    private int idProdotto;
-    public QuantitaInsufficienteException(int idProdotto){
-        this.idProdotto=idProdotto;
+    private String codiceBarre;
+    public QuantitaInsufficienteException(String codiceBarre){
+        this.codiceBarre=codiceBarre;
     }
 
-    public int getIdProdotto(){
-        return idProdotto;
+    public String getCodiceBarre(){
+        return codiceBarre;
     }
 
 }

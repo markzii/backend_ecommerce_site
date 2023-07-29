@@ -34,6 +34,7 @@ public class SecurityConfiguration{
                                 .requestMatchers("/carrello/**").permitAll()
                                 .requestMatchers("/admin/**").permitAll()
                                 .requestMatchers("/registrazione/**").permitAll()
+                                .requestMatchers("/acquisti/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement()

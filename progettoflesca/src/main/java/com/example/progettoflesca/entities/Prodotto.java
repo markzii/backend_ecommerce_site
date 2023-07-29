@@ -35,7 +35,7 @@ public class Prodotto {
 
     @JoinColumn(name = "categoria")
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JsonIgnore
+    //@JsonIgnore
     private Categoria categoria;
 
     @Version

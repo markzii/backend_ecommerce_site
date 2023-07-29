@@ -4,10 +4,10 @@ import lombok.Data;
 
 @Data
 public class PrezzoCambiatoException extends Throwable {
-    private int idProdotto;
+    private String nome;
     private float prezzo;
-    public PrezzoCambiatoException(int id, float p) {
-        idProdotto = id;
+    public PrezzoCambiatoException(String nome, float p) {
+        this.nome = nome;
         prezzo = p;
     }
 }

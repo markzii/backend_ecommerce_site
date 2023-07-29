@@ -33,14 +33,13 @@ public class CarrelloService {
     }
 
     @Transactional(rollbackFor = {QuantitaInsufficienteException.class, IllegalArgumentException.class})
-    public Carrello aggiungiAlCarrello(int idProdotto, int quantita) throws QuantitaInsufficienteException, IllegalArgumentException{
+    public String aggiungiAlCarrello(int idProdotto, int quantita) throws QuantitaInsufficienteException, IllegalArgumentException{
         //Prodotto prodotto = prodottoRepository.findByIdWithLock(idProdotto, LockModeType.OPTIMISTIC);
-        System.out.println(idProdotto);
-        System.out.println(quantita);
+
         Prodotto prodotto = prodottoRepository.findById(idProdotto);
-        //System.out.println(prodotto);
+
         if(quantita <=0 ) throw new IllegalArgumentException();
-        if(prodotto.getQuantita()<quantita) throw new QuantitaInsufficienteException(prodotto.getId());
+        if(prodotto.getQuantita()<quantita) throw new QuantitaInsufficienteException(prodotto.getCodiceBarre());
 
         boolean inCarrello = false;
 
@@ -53,7 +52,7 @@ public class CarrelloService {
 
         for(DettaglioCarrello pc: carrello.getProdottiCarrello()){
             if (pc.getProdotto().getId() == idProdotto) {
-                pc.setQuantita(dc.getQuantita() + quantita);
+                pc.setQuantita(pc.getQuantita() + quantita);
                 inCarrello=true;
                 break;
             }
@@ -67,10 +66,8 @@ public class CarrelloService {
             dc.setCarr(carrello);
             dettaglioCarrelloRepository.save(dc);
         }
-        int q = prodotto.getQuantita();
-        //prodotto.setQuantita(q-quantita);
-        //prodottoRepository.save(prodotto);
-        return carrello;
+
+        return "true";
     }
     @Transactional(rollbackFor = QuantitaInsufficienteException.class)
     public Carrello modificaCarrello(int idProdotto, int quantita) throws QuantitaInsufficienteException{
@@ -83,14 +80,14 @@ public class CarrelloService {
         for(DettaglioCarrello pc: carrello.getProdottiCarrello()){
             if (pc.getProdotto().getId() == idProdotto) {
                 if(quantita==0) { //vuoi eliminare dal carrello
-                    pc.setQuantita(quantita);
+                    //pc.setQuantita(quantita);
                     carrello.getProdottiCarrello().remove(pc);
                     dettaglioCarrelloRepository.delete(pc);
                     break;
                 } else
-                    if(quantita > 0 && pc.getProdotto().getQuantita() < quantita)
-                        throw new QuantitaInsufficienteException(pc.getProdotto().getId());
-                    else {
+                    if(quantita > 0 /*&& pc.getProdotto().getQuantita() < quantita*/){
+                        /*throw new QuantitaInsufficienteException(pc.getProdotto().getId());
+                    else {*/
                         //non ci vuole l'aggiornamento con la quantita che aumenta se ne chiede di meno perchè solo con l'acquisto si sottrae effettivamente la quantita del prodotto
                         pc.setQuantita(quantita);
                         dettaglioCarrelloRepository.save(pc);

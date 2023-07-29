@@ -20,16 +20,16 @@ public class ConsultaAcquisti {
     @Autowired
     private ConsultareAcquistiService consultareAcquistiService;
 
-    @GetMapping
-    @PreAuthorize("hasAuthority('farmacia') or hasAuthority('gestore')")
+    @GetMapping("/tutti")
+    @PreAuthorize("hasAuthority('client')")
     public ResponseEntity visualizzaAcquisti(@RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber,
                                              @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
                                              @RequestParam(value = "sortBy", defaultValue = "id") String sortBy) {
-        List<Acquisto> risultato = consultareAcquistiService.consultareAcquistiService(pageNumber, pageSize, sortBy);
+        List<Acquisto> risultato = consultareAcquistiService.consultareAcquisti(pageNumber, pageSize, sortBy);
         return new ResponseEntity(risultato, HttpStatus.OK);
     }
 
-    @PostMapping()
+    /**@PostMapping()
     @PreAuthorize("hasAuthority('farmacia') or hasAuthority('gestore')")
     public ResponseEntity visualizzaAcquisti(@RequestBody List<Date> date) { //1 inizio, 2 fine
         try{
@@ -37,5 +37,5 @@ public class ConsultaAcquisti {
         } catch (RangeDataErratoException e) {
             return new ResponseEntity("Errore: intervallo date errate", HttpStatus.OK);
         }
-    }
+    }*/
 }

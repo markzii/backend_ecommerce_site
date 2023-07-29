@@ -3,6 +3,7 @@ package com.example.progettoflesca.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class Utente {
     @Column(name = "cognome", nullable = true, length = 50)
     private String cognome;
 
-    @Column(name = "email", nullable = false, length = 60)
+    @Column(name = "email", nullable = false, length = 60, unique = true)
     private String email;
 
     @Column(name = "telefono", nullable = true, length = 10)
@@ -37,6 +38,7 @@ public class Utente {
     @OneToOne
     @JoinColumn(name = "carrello")
     @JsonIgnore
+    @ToString.Exclude
     private Carrello carrello;
 
     @OneToMany(mappedBy = "utente", cascade = CascadeType.MERGE)

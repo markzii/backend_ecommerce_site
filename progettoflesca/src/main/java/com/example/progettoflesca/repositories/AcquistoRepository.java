@@ -15,6 +15,6 @@ public interface AcquistoRepository extends JpaRepository<Acquisto, Integer> {
     @Query("select a from Acquisto a where a.utente.email=:email")
     Page<Acquisto> findByEmail(String email, Pageable pageable);
 
-    @Query("select p from Acquisto p where p.data > ?1 and p.data < ?2 and p.utente.email = ?3")
-    List<Acquisto> findByAcquirenteInData(Date startDate, Date endDate, String email);
+    /*@Query("select p from Acquisto p where p.oraacquisto > ?1 and p.oraacquisto < ?2 and p.utente.email = ?3")
+    List<Acquisto> findByAcquirenteInData(Date startDate, Date endDate, String email);*/
 }

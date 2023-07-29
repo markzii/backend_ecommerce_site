@@ -26,6 +26,7 @@ public class DettaglioCarrello {
 
     @ManyToOne(cascade = CascadeType.MERGE)//il cascade tipe qui potrebbe essere pericoloso, perchè propaga le modifiche sui prodotti visti da tutti gli utenti?
     @JoinColumn(name = "prodotto")
+    @ToString.Exclude
     private Prodotto prodotto;
 
     @ManyToOne
@@ -33,6 +34,5 @@ public class DettaglioCarrello {
     @JsonIgnore
     @ToString.Exclude
     private Carrello carr;
-
 
 }

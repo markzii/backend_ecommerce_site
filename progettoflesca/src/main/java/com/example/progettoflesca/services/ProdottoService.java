@@ -20,7 +20,6 @@ import java.util.List;
 //service che permette la stampa dei prodotti da parte di un acquirente
 @Service
 public class ProdottoService {
-
     @Autowired
     private ProdottoRepository prodRepository;
     @Autowired
@@ -32,29 +31,24 @@ public class ProdottoService {
         Page<Prodotto> pagedResult = prodRepository.findAll(paging);
         if (pagedResult.hasContent()) {
             return pagedResult.getContent();
-        }
-        else {
+        } else {
             return new ArrayList<>();
         }
     }
-
     @Transactional(readOnly = true)
     public List<Prodotto> getProdottiDalNome(String nome, int numPagine, int dimPagina, String ordine) {
         Pageable paging = PageRequest.of(numPagine, dimPagina, Sort.by(ordine));
         Page<Prodotto> pagedResult = prodRepository.findByNome(nome, paging);
         if (pagedResult.hasContent()) {
             return pagedResult.getContent();
-        }
-        else {
+        } else {
             return new ArrayList<>();
         }
     }
-
     @Transactional(readOnly = true)
     public Prodotto getProdottoDalCodiceBarre(String codiceBarre) {
         return prodRepository.findBycodiceBarre(codiceBarre);
     }
-
     @Transactional(readOnly = true)
     public List<Prodotto> getProdottiDallaCategoria(String categoria, int numPagine, int dimPagina, String ordine) {
         Pageable paging = PageRequest.of(numPagine, dimPagina, Sort.by(ordine));
@@ -62,8 +56,7 @@ public class ProdottoService {
         Page<Prodotto> pagedResult = prodRepository.findBycategoria(cat, paging);
         if (pagedResult.hasContent()) {
             return pagedResult.getContent();
-        }
-        else {
+        } else {
             return new ArrayList<>();
         }
     }
@@ -71,9 +64,7 @@ public class ProdottoService {
     public Prodotto getProdottiDaId(int id) {
         //return prodRepository.findByIdWithLock(id, LockModeType.OPTIMISTIC);
         return prodRepository.findById(id);
-
     }
-
 
     //Servizi effettuabili solo dall'amministratore
     /*@Transactional(readOnly = false, rollbackFor = {ProdottoEsistenteException.class, NoCodiceBarreException.class})
@@ -100,7 +91,6 @@ public class ProdottoService {
         categRepository.save(cate);
         return prodRepository.save(prodotto);
     }
-
     @Transactional(readOnly = false)
     public Categoria aggiungiCategoria(Categoria c) {
         *Categoria cate = new Categoria();
@@ -113,12 +103,11 @@ public class ProdottoService {
         if(quantita < 0 || prezzo < 0)
             throw new AggiornamentoErroreException();
         //Prodotto prodotto= prodRepository.findByIdWithLock(id, LockModeType.PESSIMISTIC_WRITE);
-    Prodotto prodotto= prodRepository.findById(id);
+        Prodotto prodotto= prodRepository.findById(id);
         prodotto.setPrezzo(prezzo);
         prodotto.setQuantita(prodotto.getQuantita()+quantita);
         return prodRepository.save(prodotto);
     }
-
     @Transactional(readOnly = false, rollbackFor = EliminazioneErroreException.class)
     public void eliminaProdotto(int id) throws EliminazioneErroreException {
         if(id <= 0) throw new EliminazioneErroreException();
@@ -127,9 +116,6 @@ public class ProdottoService {
 
         prodRepository.delete(prodotto);
     }*/
-
-
-
 
     /*Il contesto di persistenza di Spring rileverà automaticamente le modifiche apportate all'entità gestita.
     Non è necessario chiamare esplicitamente il metodo save().
