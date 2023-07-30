@@ -5,7 +5,9 @@ import com.example.progettoflesca.entities.Carrello;
 import com.example.progettoflesca.entities.DettaglioCarrello;
 import com.example.progettoflesca.entities.Prodotto;
 import com.example.progettoflesca. entities.Utente;
+import com.example.progettoflesca.exception.ProdottoNonEsistente;
 import com.example.progettoflesca.exception.QuantitaInsufficienteException;
+import com.example.progettoflesca.exception.QuantitaNegaticaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,10 +34,8 @@ public class CarrelloService {
         return utente.getCarrello().getProdottiCarrello();
     }
 
-    @Transactional(rollbackFor = {QuantitaInsufficienteException.class, IllegalArgumentException.class})
+    @Transactional(readOnly = false, rollbackFor = {QuantitaInsufficienteException.class, IllegalArgumentException.class})
     public String aggiungiAlCarrello(int idProdotto, int quantita) throws QuantitaInsufficienteException, IllegalArgumentException{
-        //Prodotto prodotto = prodottoRepository.findByIdWithLock(idProdotto, LockModeType.OPTIMISTIC);
-
         Prodotto prodotto = prodottoRepository.findById(idProdotto);
 
         if(quantita <=0 ) throw new IllegalArgumentException();
@@ -66,41 +66,33 @@ public class CarrelloService {
             dc.setCarr(carrello);
             dettaglioCarrelloRepository.save(dc);
         }
-
         return "true";
     }
-    @Transactional(rollbackFor = QuantitaInsufficienteException.class)
-    public Carrello modificaCarrello(int idProdotto, int quantita) throws QuantitaInsufficienteException{
-
+    @Transactional(readOnly = false)
+    public String modificaCarrello(int idProdotto, int quantita) throws ProdottoNonEsistente, QuantitaNegaticaException {
+        if(dettaglioCarrelloRepository.existsById(idProdotto))
+            throw new ProdottoNonEsistente();
+        System.out.println(quantita);
+        if(quantita < 0)
+            throw new QuantitaNegaticaException();
         String email= Utils.getEmail();
         Utente utente = utenteRepository.findByEmail(email);
         Carrello carrello = utente.getCarrello();
 
-
         for(DettaglioCarrello pc: carrello.getProdottiCarrello()){
             if (pc.getProdotto().getId() == idProdotto) {
                 if(quantita==0) { //vuoi eliminare dal carrello
-                    //pc.setQuantita(quantita);
                     carrello.getProdottiCarrello().remove(pc);
                     dettaglioCarrelloRepository.delete(pc);
-                    break;
-                } else
-                    if(quantita > 0 /*&& pc.getProdotto().getQuantita() < quantita*/){
-                        /*throw new QuantitaInsufficienteException(pc.getProdotto().getId());
-                    else {*/
-                        //non ci vuole l'aggiornamento con la quantita che aumenta se ne chiede di meno perchè solo con l'acquisto si sottrae effettivamente la quantita del prodotto
-                        pc.setQuantita(quantita);
-                        dettaglioCarrelloRepository.save(pc);
-                        break;
-                    }
+                    return "true";
+                } else if(quantita > 0 ){
+                    //non ci vuole l'aggiornamento con la quantita che aumenta se ne chiede di meno perchè solo con l'acquisto si sottrae effettivamente la quantita del prodotto
+                    pc.setQuantita(quantita);
+                    dettaglioCarrelloRepository.save(pc);
+                    return "true";
+                }
             }
         }
-
-        /*if(dc.getQuantita()==0) {
-            carrello.getProdottiCarrello().remove(dc);
-            dettaglioCarrelloRepository.delete(dc);
-        }
-        dettaglioCarrelloRepository.save(dc);*/
-        return carrello;
+        return "false";
     }
 }

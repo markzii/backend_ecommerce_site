@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DettaglioCarrelloRepository extends JpaRepository<DettaglioCarrello, Integer> {
 
+    boolean existsById (int id);
+
+
 }

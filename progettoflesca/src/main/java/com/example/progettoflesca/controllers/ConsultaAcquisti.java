@@ -29,7 +29,7 @@ public class ConsultaAcquisti {
         return new ResponseEntity(risultato, HttpStatus.OK);
     }
 
-    /**@PostMapping()
+    /*@PostMapping()
     @PreAuthorize("hasAuthority('farmacia') or hasAuthority('gestore')")
     public ResponseEntity visualizzaAcquisti(@RequestBody List<Date> date) { //1 inizio, 2 fine
         try{

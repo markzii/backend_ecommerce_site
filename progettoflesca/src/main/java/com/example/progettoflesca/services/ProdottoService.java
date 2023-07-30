@@ -62,13 +62,12 @@ public class ProdottoService {
     }
     @Transactional(readOnly = true)
     public Prodotto getProdottiDaId(int id) {
-        //return prodRepository.findByIdWithLock(id, LockModeType.OPTIMISTIC);
         return prodRepository.findById(id);
     }
 
     //Servizi effettuabili solo dall'amministratore
     /*@Transactional(readOnly = false, rollbackFor = {ProdottoEsistenteException.class, NoCodiceBarreException.class})
-    public Prodotto aggiungiProdotto(Prodotto p /String codiceBarre, String nome, float prezzo, int quantita, String descrizione, String categoria*) throws ProdottoEsistenteException, NoCodiceBarreException {
+    public Prodotto aggiungiProdotto(Prodotto p) throws ProdottoEsistenteException, NoCodiceBarreException {
         System.out.println(p);
         System.out.println(p.getCodiceBarre());
         if(p.getCodiceBarre().equals("")) throw new NoCodiceBarreException();
@@ -91,13 +90,13 @@ public class ProdottoService {
         categRepository.save(cate);
         return prodRepository.save(prodotto);
     }
-    @Transactional(readOnly = false)
+    /*@Transactional(readOnly = false)
     public Categoria aggiungiCategoria(Categoria c) {
-        *Categoria cate = new Categoria();
-        cate.setNome(nome);*
+        Categoria cate = new Categoria();
+        cate.setNome(nome);
         System.out.println("ciaoooqqqqq");
         return categRepository.save(c);
-    }
+    }*
     @Transactional(readOnly = false, rollbackFor = AggiornamentoErroreException.class)
     public Prodotto aggiornaProdotto(int id, int quantita, float prezzo) throws AggiornamentoErroreException {
         if(quantita < 0 || prezzo < 0)
@@ -115,7 +114,7 @@ public class ProdottoService {
         Prodotto prodotto= prodRepository.findById(id);
 
         prodRepository.delete(prodotto);
-    }*/
+    }*
 
     /*Il contesto di persistenza di Spring rileverà automaticamente le modifiche apportate all'entità gestita.
     Non è necessario chiamare esplicitamente il metodo save().

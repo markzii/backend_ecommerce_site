@@ -22,12 +22,10 @@ public class AcquistoService {
     @Autowired
     private ProdottoAcquistoRepository prodottoAcquistoRepository;
     @Autowired
-    private DettaglioCarrelloRepository dettaglioCarrelloRepository;
-    @Autowired
     private CarrelloRepository carrelloRepository;
 
     @Transactional(readOnly = false, rollbackFor = {QuantitaInsufficienteException.class, PrezzoCambiatoException.class})
-    public void acquista(/*List<DettaglioOrdineClient> carrelloClient*/) throws QuantitaInsufficienteException, PrezzoCambiatoException {
+    public void acquista() throws QuantitaInsufficienteException, PrezzoCambiatoException {
         String email= Utils.getEmail();
 
         Utente utente = utenteRepository.findByEmail(email);
@@ -36,17 +34,14 @@ public class AcquistoService {
         List<DettaglioCarrello> listaProdotti = carrello.getProdottiCarrello();
 
         for(DettaglioCarrello prod: listaProdotti) {
-            //Prodotto prodotto = prodottoRepository.findByIdWithLock(prod.getProdotto().getId(), LockModeType.PESSIMISTIC_WRITE); //prendo il prodotto con LOCK perchè mentre si acquista nessuno deve poterlo modificare
             Prodotto prodotto = prodottoRepository.findById(prod.getProdotto().getId()); //prendo il prodotto con LOCK perchè mentre si acquista nessuno deve poterlo modificare
 
-            //for(DettaglioOrdineClient prodClient: carrelloClient) {
-                if(prod.getProdotto().getId() == prodotto.getId()) {//verifico del prezzo se è cambiato e se si ha il numero di pezzi
-                    if (prod.getPrezzo() != prodotto.getPrezzo())
-                        throw new PrezzoCambiatoException(prodotto.getNome(), prodotto.getPrezzo());
-                    if (prodotto.getQuantita() < prod.getQuantita())
-                        throw new QuantitaInsufficienteException(prodotto.getNome());
-                }
-            //}
+            if(prod.getProdotto().getId() == prodotto.getId()) {//verifico del prezzo se è cambiato e se si ha il numero di pezzi
+                if (prod.getPrezzo() != prodotto.getPrezzo())
+                    throw new PrezzoCambiatoException(prodotto.getNome(), prodotto.getPrezzo());
+                if (prodotto.getQuantita() < prod.getQuantita())
+                    throw new QuantitaInsufficienteException(prodotto.getNome());
+            }
         }
 
         Acquisto acquisto = new Acquisto();

@@ -5,6 +5,8 @@ import com.example.progettoflesca.entities.Carrello;
 import com.example.progettoflesca.entities.DTOUtente;
 import com.example.progettoflesca.entities.Utente;
 import com.example.progettoflesca.exception.MailUsataEsisteException;
+import com.example.progettoflesca.exception.PrezzoCambiatoException;
+import com.example.progettoflesca.exception.QuantitaInsufficienteException;
 import com.example.progettoflesca.repositories.CarrelloRepository;
 import com.example.progettoflesca.repositories.UtenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ public class AccountService {
     @Autowired
     private CarrelloRepository carrelloRepository;
 
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, rollbackFor = {MailUsataEsisteException.class, Exception.class})
     public Utente registerUser(DTOUtente dtoUtente) throws MailUsataEsisteException, Exception{
         if (utenteRepository.existsByEmail(dtoUtente.getEmail())) {
             throw new MailUsataEsisteException();

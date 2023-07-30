@@ -62,7 +62,7 @@ public class ProdottoController {
 
     /*@PostMapping("/addp")
     //@PreAuthorize("hasRole('client_user')")
-    public ResponseEntity aggiungiProdotto(@RequestBody  Prodotto prodotto) {
+    public ResponseEntity aggiungiProdotto(@RequestBody Prodotto prodotto) {
         System.out.println("ciaooooo");
         try {
             Prodotto risultato = prodottoService.aggiungiProdotto(prodotto);
@@ -75,7 +75,7 @@ public class ProdottoController {
         } catch (NoCodiceBarreException e) {
             return new ResponseEntity("Inserire codice a barre", HttpStatus.BAD_REQUEST);
         }
-    }*/
+    }
     /*@PutMapping("/{id}/aggiorna")
     @PreAuthorize("hasRole('client_user')")
     public ResponseEntity modificaProdotto( @RequestParam(value = "id") int id, @RequestParam(value = "quantita", defaultValue = "0") int quantita, @RequestParam(value = "prezzo", defaultValue = "0") float prezzo){
